@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>제주시농협 공정 추첨 시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15181c; --paper:#f4f0e6; --paper2:#ebe5d6;
+    --gold:#b8893a; --gold2:#d9b15e; --crimson:#9a2b1e;
+    --green:#1d4d3a; --line:rgba(21,24,28,.14);
+    --shadow:0 18px 50px -20px rgba(21,24,28,.5);
+    --mono:'JetBrains Mono',monospace;
+    --serif:'Gowun Batang',serif;
+    --sans:'IBM Plex Sans KR',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(184,137,58,.10), transparent 42%),
+      radial-gradient(circle at 88% 82%, rgba(29,77,58,.08), transparent 45%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+    min-height:100vh;padding:0 0 80px;
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
+
+  /* top bar */
+  .topbar{display:flex;justify-content:space-between;align-items:center;max-width:1000px;
+    margin:0 auto;padding:18px 22px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.14em;color:var(--green);text-transform:uppercase}
+  .brand .seal{width:24px;height:24px;border-radius:50%;background:var(--green);color:var(--paper);
+    display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:13px}
+  .roletag{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:7px 14px;border-radius:100px;
+    border:1px solid var(--line);cursor:pointer;transition:.2s;background:var(--paper)}
+  .roletag:hover{background:var(--paper2)}
+  .roletag.admin{background:var(--crimson);color:#fff;border-color:var(--crimson)}
+
+  /* Header */
+  header{text-align:center;padding:30px 22px 30px;position:relative}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--green);border:1px solid var(--green);
+    padding:6px 14px;border-radius:100px;margin-bottom:20px}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--crimson)}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(28px,5.5vw,48px);letter-spacing:-.01em;line-height:1.08}
+  h1 .em{color:var(--crimson)}
+  .sub{margin-top:14px;font-size:14px;color:#5a564c;letter-spacing:.02em}
+  .rule{width:64px;height:2px;background:var(--gold);margin:22px auto 0;position:relative}
+  .rule::before,.rule::after{content:"";position:absolute;top:50%;width:5px;height:5px;background:var(--gold);
+    border-radius:50%;transform:translateY(-50%)}
+  .rule::before{left:-12px}.rule::after{right:-12px}
+
+  .mbanner{text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.1em;padding:11px;
+    border-radius:10px;margin-bottom:26px}
+  .mbanner.test{background:rgba(21,24,28,.06);color:#55524a;border:1px dashed var(--line)}
+  .mbanner.real{background:rgba(154,43,30,.08);color:var(--crimson);border:1px solid rgba(154,43,30,.3);font-weight:600}
+  .mbanner.public{background:rgba(29,77,58,.07);color:var(--green);border:1px solid rgba(29,77,58,.22)}
+
+  .modebar{display:flex;justify-content:center;margin:8px 0 26px}
+  .modeswitch{display:inline-flex;background:var(--paper2);border:1px solid var(--line);border-radius:100px;
+    padding:4px;gap:4px;box-shadow:inset 0 1px 3px rgba(0,0,0,.05)}
+  .modeswitch button{border:none;background:transparent;font-family:var(--mono);font-size:12px;
+    letter-spacing:.08em;padding:9px 20px;border-radius:100px;cursor:pointer;color:#6a665c;transition:.25s;text-transform:uppercase}
+  .modeswitch button.on.test{background:var(--ink);color:var(--paper)}
+  .modeswitch button.on.real{background:var(--crimson);color:#fff;box-shadow:0 4px 14px -4px var(--crimson)}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px;
+    margin-bottom:22px;box-shadow:var(--shadow);position:relative}
+  .card::before{content:"";position:absolute;inset:5px;border:1px solid rgba(184,137,58,.18);border-radius:11px;pointer-events:none}
+  .ctitle{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+  .chead{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+  .chead .num{font-family:var(--mono);font-size:13px;background:var(--ink);color:var(--paper);width:26px;height:26px;
+    border-radius:50%;display:grid;place-items:center;font-weight:500}
+
+  label{display:block;font-size:12px;letter-spacing:.04em;color:#6a665c;margin-bottom:7px;font-weight:500}
+  textarea,input[type=text],input[type=number],input[type=password]{width:100%;font-family:var(--mono);font-size:13px;
+    background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:12px 14px;color:var(--ink);resize:vertical;transition:.2s}
+  textarea:focus,input:focus{outline:none;border-color:var(--gold);background:#fff}
+  textarea{min-height:120px;line-height:1.7}
+  .hint{font-size:11px;color:#908b7e;margin-top:6px;font-family:var(--mono)}
+
+  .prize-row{display:grid;grid-template-columns:1fr 90px 38px;gap:10px;margin-bottom:10px;align-items:center}
+  .prize-row input{margin:0}
+  .prize-row .del{border:1px solid var(--line);background:var(--paper2);border-radius:8px;cursor:pointer;
+    height:42px;color:var(--crimson);font-size:18px;transition:.2s}
+  .prize-row .del:hover{background:var(--crimson);color:#fff;border-color:var(--crimson)}
+  .addbtn{font-family:var(--mono);font-size:12px;letter-spacing:.06em;background:none;border:1px dashed var(--gold);
+    color:var(--gold);padding:9px 16px;border-radius:8px;cursor:pointer;margin-top:6px;transition:.2s}
+  .addbtn:hover{background:var(--gold);color:#fff}
+
+  .opt{display:flex;align-items:flex-start;gap:11px;padding:14px;background:var(--paper2);border-radius:10px;margin-top:14px;cursor:pointer}
+  .opt input{margin-top:3px;accent-color:var(--green);width:16px;height:16px}
+  .opt .ot{font-size:13px;font-weight:600;margin-bottom:2px}
+  .opt .od{font-size:11px;color:#807b6e;line-height:1.5;font-family:var(--mono)}
+
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
+  .btn{flex:1;min-width:170px;font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.03em;
+    padding:15px;border-radius:11px;cursor:pointer;border:none;transition:.25s}
+  .btn-commit{background:var(--green);color:#fff}
+  .btn-commit:hover{filter:brightness(1.12);transform:translateY(-2px)}
+  .btn-reveal{background:var(--crimson);color:#fff;box-shadow:0 8px 24px -10px var(--crimson)}
+  .btn-reveal:hover{filter:brightness(1.1);transform:translateY(-2px)}
+  .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;filter:none!important}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);flex:0 0 auto;min-width:auto;padding:15px 22px}
+  .btn-ghost:hover{background:var(--paper2)}
+
+  .commitbox{background:var(--ink);color:var(--paper);border-radius:12px;padding:20px;margin-top:18px;
+    font-family:var(--mono);font-size:12px;line-height:1.8;word-break:break-all}
+  .commitbox .k{color:var(--gold2)}
+  .commitbox .seal{display:inline-block;font-size:10px;letter-spacing:.2em;background:var(--gold);color:var(--ink);
+    padding:3px 10px;border-radius:4px;margin-bottom:10px;font-weight:700}
+
+  .result-wrap{margin-top:8px}
+  .prize-block{border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
+  .prize-block .ph{background:linear-gradient(90deg,var(--crimson),#b8492f);color:#fff;padding:14px 18px;
+    display:flex;justify-content:space-between;align-items:center}
+  .prize-block .ph .pn{font-family:var(--serif);font-size:18px;font-weight:700}
+  .prize-block .ph .pc{font-family:var(--mono);font-size:12px;opacity:.85}
+  .winners{padding:16px 18px;display:flex;flex-wrap:wrap;gap:9px}
+  .winner{font-family:var(--mono);font-size:13px;background:var(--paper2);border:1px solid var(--gold);
+    border-radius:8px;padding:8px 14px;font-weight:500;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
+  @keyframes pop{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
+
+  details.verify{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--paper2)}
+  details.verify summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+    color:var(--green);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details.verify summary::-webkit-details-marker{display:none}
+  details.verify summary .ar{transition:.3s}
+  details.verify[open] summary .ar{transform:rotate(90deg)}
+  .vbody{padding:0 18px 18px;font-family:var(--mono);font-size:11.5px;line-height:1.85;color:#55524a}
+  .vbody .row{display:flex;gap:8px;padding:6px 0;border-bottom:1px dotted var(--line);word-break:break-all}
+  .vbody .row .vk{color:var(--green);min-width:120px;font-weight:600}
+  .vstatus{margin-top:14px;padding:12px;border-radius:8px;font-weight:600;text-align:center}
+  .vstatus.ok{background:rgba(29,77,58,.12);color:var(--green);border:1px solid rgba(29,77,58,.3)}
+  .vstatus.bad{background:rgba(154,43,30,.12);color:var(--crimson);border:1px solid rgba(154,43,30,.3)}
+
+  .hitem{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;background:var(--paper);transition:.2s}
+  .hitem:hover{border-color:var(--gold)}
+  .hitem .hh{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+  .hitem .ht{font-family:var(--serif);font-weight:700;font-size:15px}
+  .hitem .hdate{font-family:var(--mono);font-size:11px;color:#908b7e}
+  .hitem .hsum{font-family:var(--mono);font-size:11.5px;color:#55524a;line-height:1.7}
+  .hitem .hhash{font-family:var(--mono);font-size:10.5px;color:var(--gold);word-break:break-all;margin-top:6px}
+  .empty{text-align:center;color:#908b7e;font-family:var(--mono);font-size:12px;padding:30px;border:1px dashed var(--line);border-radius:12px}
+  .hactions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+  .hactions button{font-family:var(--mono);font-size:11px;border:1px solid var(--line);background:var(--paper2);
+    border-radius:7px;padding:7px 12px;cursor:pointer;transition:.2s}
+  .hactions button:hover{background:var(--ink);color:var(--paper)}
+
+  .footnote{text-align:center;font-family:var(--mono);font-size:11px;color:#908b7e;margin-top:30px;line-height:1.8}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
+    border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);
+    color:var(--paper);padding:13px 22px;border-radius:10px;font-size:13px;font-family:var(--mono);z-index:200;
+    transition:.4s;box-shadow:var(--shadow)}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(21,24,28,.55);backdrop-filter:blur(4px);z-index:150;
+    display:none;align-items:center;justify-content:center;padding:22px}
+  .overlay.show{display:flex}
+  .modal{background:var(--paper);border-radius:18px;padding:30px;max-width:380px;width:100%;box-shadow:var(--shadow);
+    position:relative;animation:pop .3s cubic-bezier(.2,1.4,.4,1)}
+  .modal h3{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:6px}
+  .modal p{font-size:12px;color:#807b6e;line-height:1.6;margin-bottom:18px}
+  .modal .close{position:absolute;top:16px;right:18px;border:none;background:none;font-size:22px;color:#908b7e;cursor:pointer}
+
+  .hidden{display:none!important}
+  @media(max-width:560px){.prize-row{grid-template-columns:1fr 70px 38px}.topbar{flex-wrap:wrap;gap:10px}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="seal">農</span>제주시농협 공정 추첨 시스템</div>
+  <button id="roleBtn" class="roletag" onclick="onRoleClick()">🔑 관리자 로그인</button>
+</div>
+
+<header>
+  <div class="badge"><span class="dot"></span>VERIFIABLE DRAW · 검증 가능 추첨</div>
+  <h1>제주시농협 <span class="em">공정 추첨</span> 시스템</h1>
+  <p class="sub">커밋–리빌 + 블록해시 검증 · 모든 행사에 사용 가능</p>
+  <div class="rule"></div>
+</header>
+
+<div class="wrap">
+  <div id="banner" class="mbanner public">공개 열람 모드 — 지난 추첨 이력을 확인하고 공정성을 직접 검증할 수 있습니다.</div>
+
+  <!-- ADMIN-ONLY: mode toggle -->
+  <div id="adminMode" class="modebar hidden">
+    <div class="modeswitch">
+      <button id="mTest" class="on test" onclick="setMode('test')">● 테스트 모드</button>
+      <button id="mReal" class="real" onclick="setMode('real')">● 실제 추첨</button>
+    </div>
+  </div>
+
+  <!-- ADMIN-ONLY: setup -->
+  <div id="adminPanel" class="hidden">
+    <div class="card">
+      <div class="ctitle">Setup</div>
+      <div class="chead"><span class="num">1</span>행사명 · 참가자 · 경품</div>
+      <label>행사명</label>
+      <input type="text" id="eventName" placeholder="예: 제주시농협 창립 50주년 경품 추첨" value="">
+      <label style="margin-top:16px">참가자 명단 <span style="color:#b8893a">(한 줄에 한 명)</span></label>
+      <textarea id="entrants" placeholder="홍길동&#10;김제주&#10;..."></textarea>
+      <div class="hint" id="entCount">0명</div>
+      <label style="margin-top:20px">경품 &amp; 인원</label>
+      <div id="prizes"></div>
+      <button class="addbtn" onclick="addPrize()">+ 경품 추가</button>
+      <label class="opt" style="margin-top:20px" for="useBlock">
+        <input type="checkbox" id="useBlock" checked>
+        <span><div class="ot">🔗 비트코인 블록해시 섞기 (신뢰도 최상)</div>
+        <div class="od">추첨 순간의 최신 블록 해시를 시드에 섞어, 주최 측조차 결과를 미리 알 수 없게 합니다.</div></span>
+      </label>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">Commit</div>
+      <div class="chead"><span class="num">2</span>봉인 (사전 공개)</div>
+      <p style="font-size:13px;color:#5a564c;line-height:1.7;margin-bottom:6px">명단과 비밀 시드를 해시로 봉인합니다. 이 해시를 추첨 <b>전에</b> 공개하면, 나중에 명단이나 시드를 바꿀 수 없음이 증명됩니다.</p>
+      <div class="actions"><button class="btn btn-commit" id="btnCommit" onclick="doCommit()">🔒 봉인하고 해시 공개</button></div>
+      <div id="commitOut"></div>
+    </div>
+
+    <div class="card">
+      <div class="ctitle">Reveal</div>
+      <div class="chead"><span class="num">3</span>추첨 실행</div>
+      <div class="actions">
+        <button class="btn btn-reveal" id="btnReveal" onclick="doReveal()" disabled>🎉 추첨 시작</button>
+        <button class="btn btn-ghost" onclick="resetDraw()">초기화</button>
+      </div>
+      <div id="resultOut" class="result-wrap"></div>
+    </div>
+
+    <div id="changePwWrap" class="hidden" style="text-align:right;margin:-8px 0 22px">
+      <button onclick="openModal('change')" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:none;border:1px solid var(--line);color:#6a665c;padding:8px 14px;border-radius:8px;cursor:pointer">🔧 관리자 비밀번호 변경</button>
+    </div>
+  </div>
+
+  <!-- ledger : visible to everyone -->
+  <div class="card">
+    <div class="ctitle">Ledger · 공개 이력</div>
+    <div class="chead"><span class="num" id="ledgerNum">★</span>추첨 이력 <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:#908b7e">(누구나 열람·검증)</span></div>
+    <div id="history"></div>
+  </div>
+
+  <!-- verifier : visible to everyone -->
+  <div class="card" id="verifierCard">
+    <div class="ctitle">Verify · 누구나 검증</div>
+    <div class="chead"><span class="num">🔎</span>공정성 직접 검증하기</div>
+    <p style="font-size:13px;color:#5a564c;line-height:1.7;margin-bottom:16px">위 이력의 <b>「🔁 이 추첨 검증하기」</b> 버튼을 누르면 자동으로 채워집니다. <b>「재현 &amp; 검증」</b>을 누르면 추첨을 똑같이 다시 돌려, 발표된 당첨자와 한 글자도 다르지 않은지 확인합니다.</p>
+    <label>공개 시드 (Seed)</label>
+    <input type="text" id="vSeed" placeholder="추첨 후 공개된 64자리 시드">
+    <label style="margin-top:14px">블록 해시 (선택)</label>
+    <input type="text" id="vBlock" placeholder="추첨 순간 공개된 비트코인 블록해시">
+    <label style="margin-top:14px">참가자 명단 (봉인 당시 순서 그대로)</label>
+    <textarea id="vEntrants" placeholder="홍길동&#10;김제주&#10;..."></textarea>
+    <label style="margin-top:14px">경품 &amp; 인원</label>
+    <div id="vPrizes"></div>
+    <button class="addbtn" onclick="addVPrize()">+ 경품 추가</button>
+    <label style="margin-top:14px">발표된 커밋 해시 (선택)</label>
+    <input type="text" id="vCommit" placeholder="추첨 전 공개된 커밋 해시">
+    <div class="actions" style="margin-top:18px">
+      <button class="btn btn-commit" onclick="runVerify()">🔁 추첨 재현 &amp; 검증</button>
+      <button class="btn btn-ghost" onclick="clearVerifier()">비우기</button>
+    </div>
+    <div id="vResult"></div>
+  </div>
+
+  <p class="footnote">SHA-256 커밋–리빌 · 검증은 누구나 재현 가능 · 비용 0원<br>제주시농협 공정 추첨 시스템 · 2026</p>
+</div>
+
+<!-- login modal -->
+<div id="overlay" class="overlay">
+  <div class="modal">
+    <button class="close" onclick="closeModal()">×</button>
+    <h3 id="modalTitle">관리자 로그인</h3>
+    <p id="modalDesc">추첨을 진행하려면 관리자 비밀번호를 입력하세요.</p>
+    <input type="password" id="pwInput" placeholder="비밀번호" onkeydown="if(event.key==='Enter')submitPw()">
+    <div class="actions" style="margin-top:16px">
+      <button class="btn btn-commit" onclick="submitPw()">로그인</button>
+    </div>
+    <p style="margin-top:14px;font-size:11px;color:#a09a8c" id="pwExtra"></p>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ---------- config ----------
+   ▼▼▼ 여기에 Apps Script 웹앱 배포 주소를 붙여넣으세요 ▼▼▼
+   (https://script.google.com/macros/s/........./exec 형태) */
+const API_URL='PASTE_YOUR_APPS_SCRIPT_URL_HERE';
+/* ▲▲▲ 위 한 줄만 바꾸면 백엔드 연결 완료 ▲▲▲ */
+
+let ROLE='public';
+let MODE='test';
+let committed=null;
+let ADMIN_TOKEN=null;        // 로그인 성공 시 서버가 발급한 토큰
+const enc=new TextEncoder();
+function apiReady(){return API_URL && API_URL.indexOf('PASTE_')===-1;}
+
+/* 서버 통신 (CORS preflight 회피: text/plain 단순 요청) */
+async function apiPost(payload){
+  const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(payload)});
+  return await r.json();
+}
+async function apiGet(){
+  const r=await fetch(API_URL,{method:'GET'});
+  return await r.json();
+}
+
+/* ---------- crypto/helpers ---------- */
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',enc.encode(str));
+  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function randSeed(){const a=new Uint8Array(32);crypto.getRandomValues(a);return [...a].map(b=>b.toString(16).padStart(2,'0')).join('');}
+function makeRng(seedHex){
+  let s=parseInt(seedHex.slice(0,8),16)>>>0;
+  return function(){s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;};
+}
+async function drawWinners(entrants,prizes,finalSeed){
+  let pool=[...entrants];const out=[];
+  for(let i=0;i<prizes.length;i++){
+    const streamSeed=await sha256(finalSeed+'::'+i+'::'+prizes[i].name);
+    const rng=makeRng(streamSeed);
+    const arr=[...pool];
+    for(let j=arr.length-1;j>0;j--){const k=Math.floor(rng()*(j+1));[arr[j],arr[k]]=[arr[k],arr[j]];}
+    const n=Math.min(prizes[i].count,arr.length);
+    const win=arr.slice(0,n);
+    out.push({name:prizes[i].name,count:prizes[i].count,winners:win});
+    pool=pool.filter(p=>!win.includes(p));
+  }
+  return out;
+}
+
+/* ---------- role / login (서버 검증) ---------- */
+function onRoleClick(){
+  if(ROLE==='admin'){ logout(); }
+  else{ openModal('login'); }
+}
+function openModal(kind){
+  const o=document.getElementById('overlay');
+  document.getElementById('pwInput').value='';
+  if(kind==='change'){
+    document.getElementById('modalTitle').textContent='관리자 비밀번호 변경';
+    document.getElementById('modalDesc').textContent='새 비밀번호를 입력하세요. 변경 즉시 모든 기기에 적용됩니다.';
+    document.getElementById('pwInput').placeholder='새 비밀번호 (4자 이상)';
+    document.getElementById('pwExtra').textContent='';
+    o.dataset.kind='change';
+  }else{
+    document.getElementById('modalTitle').textContent='관리자 로그인';
+    document.getElementById('modalDesc').textContent='추첨을 진행하려면 관리자 비밀번호를 입력하세요.';
+    document.getElementById('pwInput').placeholder='비밀번호';
+    document.getElementById('pwExtra').textContent='';
+    o.dataset.kind='login';
+  }
+  o.classList.add('show');
+  setTimeout(()=>document.getElementById('pwInput').focus(),100);
+}
+function closeModal(){document.getElementById('overlay').classList.remove('show');}
+async function submitPw(){
+  if(!apiReady()){document.getElementById('pwExtra').textContent='⚠ 백엔드(API_URL)가 아직 연결되지 않았습니다.';return;}
+  const kind=document.getElementById('overlay').dataset.kind;
+  const val=document.getElementById('pwInput').value;
+  const extra=document.getElementById('pwExtra');
+  if(kind==='change'){
+    if(val.length<4){extra.textContent='4자 이상 입력하세요.';return;}
+    extra.textContent='변경 중...';
+    try{
+      const res=await apiPost({action:'changePassword',token:ADMIN_TOKEN,newPassword:val});
+      if(res.ok){toast('비밀번호가 변경되었습니다');closeModal();}
+      else{extra.textContent='✗ 변경 실패: '+(res.error||'');}
+    }catch(e){extra.textContent='✗ 통신 오류';}
+    return;
+  }
+  extra.textContent='확인 중...';
+  try{
+    const res=await apiPost({action:'login',password:val});
+    if(res.ok&&res.token){ ADMIN_TOKEN=res.token; closeModal(); login(); }
+    else if(res.error==='NO_PASSWORD_SET'){ extra.textContent='✗ 서버에 관리자 비밀번호가 설정되지 않았습니다. (배포 안내서 3단계 참고)'; }
+    else{ extra.textContent='✗ 비밀번호가 일치하지 않습니다.'; }
+  }catch(e){ extra.textContent='✗ 통신 오류 — API_URL과 배포 설정을 확인하세요.'; }
+}
+function login(){
+  ROLE='admin';
+  document.getElementById('adminMode').classList.remove('hidden');
+  document.getElementById('adminPanel').classList.remove('hidden');
+  document.getElementById('changePwWrap').classList.remove('hidden');
+  const b=document.getElementById('roleBtn');b.textContent='관리자 · 로그아웃';b.classList.add('admin');
+  setMode('test');
+  loadHistory();
+  toast('관리자 모드 — 추첨을 진행할 수 있습니다');
+}
+function logout(){
+  ROLE='public';MODE='test';committed=null;ADMIN_TOKEN=null;
+  document.getElementById('adminMode').classList.add('hidden');
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('changePwWrap').classList.add('hidden');
+  document.getElementById('commitOut').innerHTML='';
+  document.getElementById('resultOut').innerHTML='';
+  const b=document.getElementById('roleBtn');b.textContent='🔑 관리자 로그인';b.classList.remove('admin');
+  const bn=document.getElementById('banner');bn.className='mbanner public';
+  bn.textContent='공개 열람 모드 — 지난 추첨 이력을 확인하고 공정성을 직접 검증할 수 있습니다.';
+  loadHistory();
+  toast('로그아웃되었습니다');
+}
+
+/* ---------- mode ---------- */
+function setMode(m){
+  MODE=m;
+  document.getElementById('mTest').classList.toggle('on',m==='test');
+  document.getElementById('mReal').classList.toggle('on',m==='real');
+  const b=document.getElementById('banner');
+  if(m==='test'){b.className='mbanner test';b.textContent='테스트 모드 — 결과가 이력에 저장되지 않습니다. 자유롭게 연습하세요.';}
+  else{b.className='mbanner real';b.textContent='⚠ 실제 추첨 모드 — 결과가 영구 이력에 기록되고 모든 접속자에게 공개됩니다.';}
+  resetDraw();
+}
+
+/* ---------- prizes ui ---------- */
+function addPrize(name='',count=1){
+  const wrap=document.getElementById('prizes');const row=document.createElement('div');row.className='prize-row';
+  row.innerHTML=`<input type="text" placeholder="경품명 (예: 1등 상품권)" value="${name.replace(/"/g,'&quot;')}">
+    <input type="number" min="1" value="${count}" placeholder="인원">
+    <button class="del" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(row);
+}
+function getPrizes(){return [...document.querySelectorAll('#prizes .prize-row')].map(r=>{const [n,c]=r.querySelectorAll('input');return {name:n.value.trim()||'경품',count:Math.max(1,parseInt(c.value)||1)};});}
+function getEntrants(){return document.getElementById('entrants').value.split('\n').map(s=>s.trim()).filter(Boolean);}
+document.getElementById('entrants').addEventListener('input',()=>{document.getElementById('entCount').textContent=getEntrants().length+'명';});
+
+/* ---------- commit ---------- */
+async function doCommit(){
+  const entrants=getEntrants();const prizes=getPrizes();
+  const eventName=document.getElementById('eventName').value.trim()||'제주시농협 추첨';
+  if(entrants.length<2){toast('참가자를 2명 이상 입력하세요');return;}
+  if(!prizes.length){toast('경품을 1개 이상 추가하세요');return;}
+  const total=prizes.reduce((s,p)=>s+p.count,0);
+  if(total>entrants.length){toast('당첨 인원 합계가 참가자 수보다 많습니다');return;}
+  const seed=randSeed();
+  const payload=JSON.stringify({entrants,prizes,seed});
+  const commitHash=await sha256(payload);
+  committed={eventName,entrants,prizes,seed,commitHash,blockHash:null};
+  document.getElementById('commitOut').innerHTML=`
+    <div class="commitbox"><span class="seal">SEALED · 봉인됨</span><br>
+      <span class="k">행사:</span> ${eventName}<br>
+      <span class="k">참가자 수:</span> ${entrants.length}명 · <span class="k">경품:</span> ${prizes.length}종 (총 ${total}명 당첨)<br>
+      <span class="k">커밋 해시 (SHA-256):</span><br>${commitHash}<br>
+      <span style="color:#908b7e">↑ 추첨 전에 이 해시를 공개하세요. 시드는 추첨 후 공개됩니다.</span></div>`;
+  document.getElementById('btnReveal').disabled=false;
+  document.getElementById('btnCommit').disabled=true;
+  toast('봉인 완료 — 추첨 준비됨');
+}
+
+/* ---------- reveal ---------- */
+async function fetchBlockHash(){
+  try{const r=await fetch('https://blockchain.info/q/latesthash',{cache:'no-store'});if(r.ok){const h=(await r.text()).trim();if(/^[0-9a-f]{64}$/.test(h))return h;}}catch(e){}
+  try{const r=await fetch('https://blockstream.info/api/blocks/tip/hash',{cache:'no-store'});if(r.ok){const h=(await r.text()).trim();if(/^[0-9a-f]{64}$/.test(h))return h;}}catch(e){}
+  return null;
+}
+async function doReveal(){
+  if(!committed){toast('먼저 봉인하세요');return;}
+  const btn=document.getElementById('btnReveal');btn.disabled=true;btn.innerHTML='<span class="spin"></span>추첨 중...';
+  let blockHash=null;
+  if(document.getElementById('useBlock').checked){blockHash=await fetchBlockHash();if(!blockHash)toast('블록해시 조회 실패 — 시드만으로 진행');}
+  committed.blockHash=blockHash;
+  const finalSeed=await sha256(committed.seed+'|'+(blockHash||'noblock'));
+  committed.finalSeed=finalSeed;
+  const results=await drawWinners(committed.entrants,committed.prizes,finalSeed);
+  committed.results=results;committed.time=new Date().toISOString();
+  renderResults(results,blockHash,finalSeed);
+  if(MODE==='real'){await saveHistory(committed);toast('실제 추첨 완료 — 이력에 기록됨');}
+  else{toast('테스트 완료 — 이력에 저장되지 않음');}
+  btn.innerHTML='🎉 추첨 시작';
+}
+function renderResults(results,blockHash,finalSeed){
+  let html='';
+  results.forEach((p,i)=>{html+=`<div class="prize-block"><div class="ph"><span class="pn">${p.name}</span><span class="pc">${p.winners.length}/${p.count}명</span></div>
+    <div class="winners">${p.winners.map((w,j)=>`<span class="winner" style="animation-delay:${(i*0.05+j*0.06).toFixed(2)}s">${w}</span>`).join('')}</div></div>`;});
+  html+=`<details class="verify"><summary><span>🔎 검증 데이터 펼치기</span><span class="ar">▶</span></summary><div class="vbody">
+      <div class="row"><span class="vk">커밋 해시</span><span>${committed.commitHash}</span></div>
+      <div class="row"><span class="vk">공개 시드</span><span>${committed.seed}</span></div>
+      <div class="row"><span class="vk">블록 해시</span><span>${blockHash||'(미사용)'}</span></div>
+      <div class="row"><span class="vk">최종 시드</span><span>${finalSeed}</span></div>
+      <div class="row"><span class="vk">추첨 시각</span><span>${committed.time}</span></div>
+      <div id="vcheck" class="vstatus">검증 확인 중...</div></div></details>`;
+  document.getElementById('resultOut').innerHTML=html;
+  (async()=>{const payload=JSON.stringify({entrants:committed.entrants,prizes:committed.prizes,seed:committed.seed});
+    const recomputed=await sha256(payload);const el=document.getElementById('vcheck');
+    if(recomputed===committed.commitHash){el.className='vstatus ok';el.textContent='✓ 검증 성공 — 봉인된 해시와 일치 (조작 없음)';}
+    else{el.className='vstatus bad';el.textContent='✗ 검증 실패';}})();
+}
+function resetDraw(){committed=null;document.getElementById('commitOut').innerHTML='';document.getElementById('resultOut').innerHTML='';
+  document.getElementById('btnReveal').disabled=true;document.getElementById('btnCommit').disabled=false;}
+
+/* ---------- history (서버 = Google 스프레드시트) ---------- */
+async function saveHistory(c){
+  const rec={id:'draw_'+Date.now(),eventName:c.eventName,time:c.time,entrantCount:c.entrants.length,
+    prizes:c.results.map(r=>({name:r.name,count:r.count,winners:r.winners})),
+    commitHash:c.commitHash,seed:c.seed,blockHash:c.blockHash,finalSeed:c.finalSeed,entrants:c.entrants};
+  try{
+    const res=await apiPost({action:'saveDraw',token:ADMIN_TOKEN,draw:rec});
+    if(!res.ok)toast('이력 저장 실패: '+(res.error||''));
+  }catch(e){toast('이력 저장 통신 오류');}
+  loadHistory();
+}
+async function loadHistory(){
+  const box=document.getElementById('history');
+  if(!apiReady()){
+    box.innerHTML='<div class="empty">⚠ 백엔드가 아직 연결되지 않았습니다.<br>코드 상단의 <b>API_URL</b>에 Apps Script 주소를 넣어주세요. (배포 안내서 참고)</div>';
+    return;
+  }
+  box.innerHTML='<div class="empty">불러오는 중...</div>';
+  let recs=[];
+  try{
+    const res=await apiGet();
+    if(res&&res.ok&&Array.isArray(res.draws))recs=res.draws;
+  }catch(e){box.innerHTML='<div class="empty">이력을 불러오지 못했습니다. 연결을 확인하세요.</div>';return;}
+  recs.sort((a,b)=>(b.time||'').localeCompare(a.time||''));
+  if(!recs.length){box.innerHTML='<div class="empty">아직 추첨 이력이 없습니다.<br>관리자가 실제 추첨을 진행하면 여기에 영구 기록되어 누구나 확인할 수 있습니다.</div>';return;}
+  box.innerHTML=recs.map(r=>{
+    const d=new Date(r.time);const dstr=isNaN(d)?r.time:d.toLocaleString('ko-KR',{dateStyle:'medium',timeStyle:'short'});
+    const sum=r.prizes.map(p=>`${p.name}: ${p.winners.join(', ')}`).join(' · ');
+    const adminDel = ROLE==='admin' ? `<button onclick='delHistory(${JSON.stringify(r.id)})' style="color:var(--crimson)">삭제</button>` : '';
+    return `<div class="hitem"><div class="hh"><span class="ht">🎯 ${r.eventName||'추첨'}</span><span class="hdate">${dstr}</span></div>
+      <div class="hsum">참가 ${r.entrantCount}명 · ${sum}</div>
+      <div class="hhash">commit: ${r.commitHash}</div>
+      <div class="hactions">
+        <button onclick='sendToVerifier(${JSON.stringify(JSON.stringify(r))})' style="background:var(--green);color:#fff;border-color:var(--green)">🔁 이 추첨 검증하기</button>
+        <button onclick='showVerify(${JSON.stringify(JSON.stringify(r))})'>검증 데이터</button>
+        <button onclick='copyVerify(${JSON.stringify(JSON.stringify(r))})'>복사</button>
+        ${adminDel}
+      </div></div>`;
+  }).join('');
+}
+async function delHistory(id){
+  if(ROLE!=='admin')return;
+  if(!confirm('이 추첨 이력을 삭제할까요? 공개 이력에서 영구 제거됩니다.'))return;
+  try{
+    const res=await apiPost({action:'deleteDraw',token:ADMIN_TOKEN,id:id});
+    if(res.ok)toast('이력 삭제됨');else toast('삭제 실패: '+(res.error||''));
+  }catch(e){toast('삭제 통신 오류');}
+  loadHistory();
+}
+function showVerify(s){const r=JSON.parse(s);
+  alert(`【검증 데이터】\n\n행사: ${r.eventName||''}\n\n커밋 해시:\n${r.commitHash}\n\n공개 시드:\n${r.seed}\n\n블록 해시:\n${r.blockHash||'(미사용)'}\n\n최종 시드:\n${r.finalSeed}\n\n참가자(${r.entrants.length}):\n${r.entrants.join(', ')}`);}
+function copyVerify(s){const r=JSON.parse(s);
+  const txt=JSON.stringify({eventName:r.eventName,commitHash:r.commitHash,seed:r.seed,blockHash:r.blockHash,finalSeed:r.finalSeed,time:r.time,entrants:r.entrants,prizes:r.prizes.map(p=>({name:p.name,count:p.count}))},null,2);
+  navigator.clipboard.writeText(txt).then(()=>toast('검증 데이터 복사됨')).catch(()=>toast('복사 실패'));}
+
+/* ---------- verifier ---------- */
+function addVPrize(name='',count=1){
+  const wrap=document.getElementById('vPrizes');const row=document.createElement('div');row.className='prize-row';
+  row.innerHTML=`<input type="text" placeholder="경품명" value="${name.replace(/"/g,'&quot;')}"><input type="number" min="1" value="${count}">
+    <button class="del" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(row);
+}
+function getVPrizes(){return [...document.querySelectorAll('#vPrizes .prize-row')].map(r=>{const [n,c]=r.querySelectorAll('input');return {name:n.value.trim()||'경품',count:Math.max(1,parseInt(c.value)||1)};});}
+function clearVerifier(){['vSeed','vBlock','vEntrants','vCommit'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('vPrizes').innerHTML='';document.getElementById('vResult').innerHTML='';delete document.getElementById('verifierCard').dataset.expected;}
+function sendToVerifier(s){
+  const r=JSON.parse(s);
+  document.getElementById('vSeed').value=r.seed;document.getElementById('vBlock').value=r.blockHash||'';
+  document.getElementById('vEntrants').value=r.entrants.join('\n');document.getElementById('vCommit').value=r.commitHash||'';
+  document.getElementById('vPrizes').innerHTML='';r.prizes.forEach(p=>addVPrize(p.name,p.count));
+  document.getElementById('verifierCard').dataset.expected=JSON.stringify(r.prizes.map(p=>({name:p.name,winners:p.winners})));
+  document.getElementById('verifierCard').scrollIntoView({behavior:'smooth'});
+  toast('검증기에 불러왔습니다 — 재현 버튼을 누르세요');
+}
+async function runVerify(){
+  const seed=document.getElementById('vSeed').value.trim();
+  const blockHash=document.getElementById('vBlock').value.trim();
+  const entrants=document.getElementById('vEntrants').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const prizes=getVPrizes();const commitClaim=document.getElementById('vCommit').value.trim();
+  const out=document.getElementById('vResult');
+  if(!seed||entrants.length<2||!prizes.length){out.innerHTML='<div class="vstatus bad" style="margin-top:16px">시드·명단(2명+)·경품을 모두 입력하세요</div>';return;}
+  const payload=JSON.stringify({entrants,prizes,seed});const recommit=await sha256(payload);
+  const finalSeed=await sha256(seed+'|'+(blockHash||'noblock'));
+  const results=await drawWinners(entrants,prizes,finalSeed);
+  let expected=null;try{expected=JSON.parse(document.getElementById('verifierCard').dataset.expected||'null');}catch(e){}
+  let matchWinners=null;
+  if(expected){matchWinners=expected.length===results.length && expected.every((e,i)=>e.name===results[i].name && e.winners.length===results[i].winners.length && e.winners.every((w,j)=>w===results[i].winners[j]));}
+  const commitOk = commitClaim ? (recommit===commitClaim) : null;
+  let html='<div style="margin-top:18px"><div style="font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;margin-bottom:10px">재현된 추첨 결과</div>';
+  results.forEach(p=>{html+=`<div class="prize-block"><div class="ph"><span class="pn">${p.name}</span><span class="pc">${p.winners.length}명</span></div>
+    <div class="winners">${p.winners.map(w=>`<span class="winner">${w}</span>`).join('')}</div></div>`;});
+  if(commitOk!==null){html+=`<div class="vstatus ${commitOk?'ok':'bad'}">${commitOk?'✓ 봉인 검증 통과 — 명단·경품·시드가 추첨 전 공개된 커밋 해시와 정확히 일치 (사후 변경 없음)':'✗ 봉인 불일치 — 입력 데이터가 공개된 커밋 해시와 다릅니다'}</div>`;}
+  if(matchWinners!==null){html+=`<div class="vstatus ${matchWinners?'ok':'bad'}" style="margin-top:10px">${matchWinners?'✓ 결과 재현 성공 — 발표된 당첨자와 100% 동일 (추첨 조작 없음)':'✗ 결과 불일치 — 발표된 당첨자와 다릅니다'}</div>`;}
+  if(commitOk===null&&matchWinners===null){html+=`<div class="vstatus ok" style="margin-top:4px">↑ 위 결과가 주최 측 발표와 같은지 직접 비교하세요. 커밋 해시를 넣으면 봉인 일치까지 자동 확인됩니다.</div>`;}
+  if(commitOk===true&&matchWinners===true){html+=`<div style="text-align:center;font-family:var(--serif);font-size:18px;font-weight:700;color:var(--green);margin-top:16px">🎖 완전 검증 완료 — 공정한 추첨임이 증명되었습니다</div>`;}
+  html+=`<div style="font-family:var(--mono);font-size:10.5px;color:#908b7e;margin-top:12px;word-break:break-all;line-height:1.7">재계산 커밋: ${recommit}<br>최종 시드: ${finalSeed}</div></div>`;
+  out.innerHTML=html;
+}
+
+/* ---------- init ---------- */
+addPrize('1등 · 상품권 30만원',1);
+addPrize('2등 · 제주 특산품',3);
+addPrize('3등 · 기념 굿즈',10);
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeModal();});
+loadHistory();
+</script>
+</body>
+</html>
