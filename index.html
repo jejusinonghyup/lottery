@@ -27,7 +27,7 @@
     min-height:100vh;padding:0 0 80px;
   }
   .wrap{max-width:1000px;margin:0 auto;padding:0 22px}
-
+ 
   /* top bar */
   .topbar{display:flex;justify-content:space-between;align-items:center;max-width:1000px;
     margin:0 auto;padding:18px 22px 0}
@@ -39,7 +39,7 @@
     border:1px solid var(--line);cursor:pointer;transition:.2s;background:var(--paper)}
   .roletag:hover{background:var(--paper2)}
   .roletag.admin{background:var(--crimson);color:#fff;border-color:var(--crimson)}
-
+ 
   /* Header */
   header{text-align:center;padding:30px 22px 30px;position:relative}
   .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;
@@ -53,13 +53,13 @@
   .rule::before,.rule::after{content:"";position:absolute;top:50%;width:5px;height:5px;background:var(--gold);
     border-radius:50%;transform:translateY(-50%)}
   .rule::before{left:-12px}.rule::after{right:-12px}
-
+ 
   .mbanner{text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.1em;padding:11px;
     border-radius:10px;margin-bottom:26px}
   .mbanner.test{background:rgba(21,24,28,.06);color:#55524a;border:1px dashed var(--line)}
   .mbanner.real{background:rgba(154,43,30,.08);color:var(--crimson);border:1px solid rgba(154,43,30,.3);font-weight:600}
   .mbanner.public{background:rgba(29,77,58,.07);color:var(--green);border:1px solid rgba(29,77,58,.22)}
-
+ 
   .modebar{display:flex;justify-content:center;margin:8px 0 26px}
   .modeswitch{display:inline-flex;background:var(--paper2);border:1px solid var(--line);border-radius:100px;
     padding:4px;gap:4px;box-shadow:inset 0 1px 3px rgba(0,0,0,.05)}
@@ -67,7 +67,7 @@
     letter-spacing:.08em;padding:9px 20px;border-radius:100px;cursor:pointer;color:#6a665c;transition:.25s;text-transform:uppercase}
   .modeswitch button.on.test{background:var(--ink);color:var(--paper)}
   .modeswitch button.on.real{background:var(--crimson);color:#fff;box-shadow:0 4px 14px -4px var(--crimson)}
-
+ 
   .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:26px;
     margin-bottom:22px;box-shadow:var(--shadow);position:relative}
   .card::before{content:"";position:absolute;inset:5px;border:1px solid rgba(184,137,58,.18);border-radius:11px;pointer-events:none}
@@ -75,14 +75,14 @@
   .chead{font-family:var(--serif);font-size:21px;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
   .chead .num{font-family:var(--mono);font-size:13px;background:var(--ink);color:var(--paper);width:26px;height:26px;
     border-radius:50%;display:grid;place-items:center;font-weight:500}
-
+ 
   label{display:block;font-size:12px;letter-spacing:.04em;color:#6a665c;margin-bottom:7px;font-weight:500}
   textarea,input[type=text],input[type=number],input[type=password]{width:100%;font-family:var(--mono);font-size:13px;
     background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:12px 14px;color:var(--ink);resize:vertical;transition:.2s}
   textarea:focus,input:focus{outline:none;border-color:var(--gold);background:#fff}
   textarea{min-height:120px;line-height:1.7}
   .hint{font-size:11px;color:#908b7e;margin-top:6px;font-family:var(--mono)}
-
+ 
   .prize-row{display:grid;grid-template-columns:1fr 90px 38px;gap:10px;margin-bottom:10px;align-items:center}
   .prize-row input{margin:0}
   .prize-row .del{border:1px solid var(--line);background:var(--paper2);border-radius:8px;cursor:pointer;
@@ -91,12 +91,12 @@
   .addbtn{font-family:var(--mono);font-size:12px;letter-spacing:.06em;background:none;border:1px dashed var(--gold);
     color:var(--gold);padding:9px 16px;border-radius:8px;cursor:pointer;margin-top:6px;transition:.2s}
   .addbtn:hover{background:var(--gold);color:#fff}
-
+ 
   .opt{display:flex;align-items:flex-start;gap:11px;padding:14px;background:var(--paper2);border-radius:10px;margin-top:14px;cursor:pointer}
   .opt input{margin-top:3px;accent-color:var(--green);width:16px;height:16px}
   .opt .ot{font-size:13px;font-weight:600;margin-bottom:2px}
   .opt .od{font-size:11px;color:#807b6e;line-height:1.5;font-family:var(--mono)}
-
+ 
   .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}
   .btn{flex:1;min-width:170px;font-family:var(--sans);font-weight:600;font-size:14px;letter-spacing:.03em;
     padding:15px;border-radius:11px;cursor:pointer;border:none;transition:.25s}
@@ -107,13 +107,13 @@
   .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;filter:none!important}
   .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);flex:0 0 auto;min-width:auto;padding:15px 22px}
   .btn-ghost:hover{background:var(--paper2)}
-
+ 
   .commitbox{background:var(--ink);color:var(--paper);border-radius:12px;padding:20px;margin-top:18px;
     font-family:var(--mono);font-size:12px;line-height:1.8;word-break:break-all}
   .commitbox .k{color:var(--gold2)}
   .commitbox .seal{display:inline-block;font-size:10px;letter-spacing:.2em;background:var(--gold);color:var(--ink);
     padding:3px 10px;border-radius:4px;margin-bottom:10px;font-weight:700}
-
+ 
   .result-wrap{margin-top:8px}
   .prize-block{border:1px solid var(--line);border-radius:14px;margin-bottom:16px;overflow:hidden}
   .prize-block .ph{background:linear-gradient(90deg,var(--crimson),#b8492f);color:#fff;padding:14px 18px;
@@ -124,7 +124,7 @@
   .winner{font-family:var(--mono);font-size:13px;background:var(--paper2);border:1px solid var(--gold);
     border-radius:8px;padding:8px 14px;font-weight:500;animation:pop .4s cubic-bezier(.2,1.4,.4,1) both}
   @keyframes pop{from{opacity:0;transform:scale(.6) translateY(8px)}to{opacity:1;transform:none}}
-
+ 
   details.verify{margin-top:18px;border:1px solid var(--line);border-radius:12px;background:var(--paper2)}
   details.verify summary{cursor:pointer;padding:14px 18px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
     color:var(--green);font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
@@ -137,9 +137,15 @@
   .vstatus{margin-top:14px;padding:12px;border-radius:8px;font-weight:600;text-align:center}
   .vstatus.ok{background:rgba(29,77,58,.12);color:var(--green);border:1px solid rgba(29,77,58,.3)}
   .vstatus.bad{background:rgba(154,43,30,.12);color:var(--crimson);border:1px solid rgba(154,43,30,.3)}
-
+ 
   .hitem{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px;background:var(--paper);transition:.2s}
   .hitem:hover{border-color:var(--gold)}
+  details.hitem>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+  details.hitem>summary::-webkit-details-marker{display:none}
+  details.hitem .hdate-wrap{display:flex;align-items:center;gap:8px}
+  details.hitem .hcaret{font-size:12px;color:#908b7e;transition:.25s}
+  details.hitem[open] .hcaret{transform:rotate(180deg)}
+  details.hitem .hbody{margin-top:12px;padding-top:12px;border-top:1px dotted var(--line);animation:pop .3s ease}
   .hitem .hh{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
   .hitem .ht{font-family:var(--serif);font-weight:700;font-size:15px}
   .hitem .hdate{font-family:var(--mono);font-size:11px;color:#908b7e}
@@ -150,7 +156,7 @@
   .hactions button{font-family:var(--mono);font-size:11px;border:1px solid var(--line);background:var(--paper2);
     border-radius:7px;padding:7px 12px;cursor:pointer;transition:.2s}
   .hactions button:hover{background:var(--ink);color:var(--paper)}
-
+ 
   .footnote{text-align:center;font-family:var(--mono);font-size:11px;color:#908b7e;margin-top:30px;line-height:1.8}
   .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;
     border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
@@ -159,7 +165,7 @@
     color:var(--paper);padding:13px 22px;border-radius:10px;font-size:13px;font-family:var(--mono);z-index:200;
     transition:.4s;box-shadow:var(--shadow)}
   .toast.show{transform:translateX(-50%) translateY(0)}
-
+ 
   /* modal */
   .overlay{position:fixed;inset:0;background:rgba(21,24,28,.55);backdrop-filter:blur(4px);z-index:150;
     display:none;align-items:center;justify-content:center;padding:22px}
@@ -169,28 +175,28 @@
   .modal h3{font-family:var(--serif);font-size:22px;font-weight:700;margin-bottom:6px}
   .modal p{font-size:12px;color:#807b6e;line-height:1.6;margin-bottom:18px}
   .modal .close{position:absolute;top:16px;right:18px;border:none;background:none;font-size:22px;color:#908b7e;cursor:pointer}
-
+ 
   .hidden{display:none!important}
   @media(max-width:560px){.prize-row{grid-template-columns:1fr 70px 38px}.topbar{flex-wrap:wrap;gap:10px}}
 </style>
 </head>
 <body>
-
+ 
 <div class="topbar">
   <div class="brand"><span class="seal">農</span>제주시농협 공정 추첨 시스템</div>
   <button id="roleBtn" class="roletag" onclick="onRoleClick()">🔑 관리자 로그인</button>
 </div>
-
+ 
 <header>
   <div class="badge"><span class="dot"></span>VERIFIABLE DRAW · 검증 가능 추첨</div>
   <h1>제주시농협 <span class="em">공정 추첨</span> 시스템</h1>
   <p class="sub">커밋–리빌 + 블록해시 검증 · 모든 행사에 사용 가능</p>
   <div class="rule"></div>
 </header>
-
+ 
 <div class="wrap">
   <div id="banner" class="mbanner public">공개 열람 모드 — 지난 추첨 이력을 확인하고 공정성을 직접 검증할 수 있습니다.</div>
-
+ 
   <!-- ADMIN-ONLY: mode toggle -->
   <div id="adminMode" class="modebar hidden">
     <div class="modeswitch">
@@ -198,7 +204,7 @@
       <button id="mReal" class="real" onclick="setMode('real')">● 실제 추첨</button>
     </div>
   </div>
-
+ 
   <!-- ADMIN-ONLY: setup -->
   <div id="adminPanel" class="hidden">
     <div class="card">
@@ -218,7 +224,7 @@
         <div class="od">추첨 순간의 최신 블록 해시를 시드에 섞어, 주최 측조차 결과를 미리 알 수 없게 합니다.</div></span>
       </label>
     </div>
-
+ 
     <div class="card">
       <div class="ctitle">Commit</div>
       <div class="chead"><span class="num">2</span>봉인 (사전 공개)</div>
@@ -226,7 +232,7 @@
       <div class="actions"><button class="btn btn-commit" id="btnCommit" onclick="doCommit()">🔒 봉인하고 해시 공개</button></div>
       <div id="commitOut"></div>
     </div>
-
+ 
     <div class="card">
       <div class="ctitle">Reveal</div>
       <div class="chead"><span class="num">3</span>추첨 실행</div>
@@ -236,19 +242,19 @@
       </div>
       <div id="resultOut" class="result-wrap"></div>
     </div>
-
+ 
     <div id="changePwWrap" class="hidden" style="text-align:right;margin:-8px 0 22px">
       <button onclick="openModal('change')" style="font-family:var(--mono);font-size:11px;letter-spacing:.06em;background:none;border:1px solid var(--line);color:#6a665c;padding:8px 14px;border-radius:8px;cursor:pointer">🔧 관리자 비밀번호 변경</button>
     </div>
   </div>
-
+ 
   <!-- ledger : visible to everyone -->
   <div class="card">
     <div class="ctitle">Ledger · 공개 이력</div>
     <div class="chead"><span class="num" id="ledgerNum">★</span>추첨 이력 <span style="font-family:var(--mono);font-size:11px;font-weight:400;color:#908b7e">(누구나 열람·검증)</span></div>
     <div id="history"></div>
   </div>
-
+ 
   <!-- verifier : visible to everyone -->
   <div class="card" id="verifierCard">
     <div class="ctitle">Verify · 누구나 검증</div>
@@ -256,14 +262,14 @@
     <p style="font-size:13px;color:#5a564c;line-height:1.7;margin-bottom:16px">
       <b>공개 시드만 붙여넣으면</b> 명단·경품·블록해시·커밋해시를 이력에서 자동으로 불러와 바로 검증합니다.
       (위 이력의 <b>「🔁 이 추첨 검증하기」</b> 버튼을 눌러도 동일합니다.)</p>
-
+ 
     <label>공개 시드 (Seed) 붙여넣기</label>
     <div style="display:flex;gap:10px;flex-wrap:wrap">
       <input type="text" id="vSeed" placeholder="추첨 후 공개된 64자리 시드" style="flex:1;min-width:220px">
       <button class="btn btn-commit" style="flex:0 0 auto;min-width:auto;padding:12px 22px" onclick="verifyBySeed()">🔁 불러와서 검증</button>
     </div>
     <div class="hint">시드를 넣고 버튼을 누르면 자동으로 채워지고 검증까지 실행됩니다.</div>
-
+ 
     <details class="verify" style="margin-top:18px">
       <summary><span>✍️ 직접 입력으로 검증 (고급 · 모든 항목 수동)</span><span class="ar">▶</span></summary>
       <div style="padding:16px 18px">
@@ -287,10 +293,10 @@
     </details>
     <div id="vResult"></div>
   </div>
-
+ 
   <p class="footnote">SHA-256 커밋–리빌 · 검증은 누구나 재현 가능<br>제주시농협 공정 추첨 시스템 · 2026</p>
 </div>
-
+ 
 <!-- login modal -->
 <div id="overlay" class="overlay">
   <div class="modal">
@@ -304,16 +310,16 @@
     <p style="margin-top:14px;font-size:11px;color:#a09a8c" id="pwExtra"></p>
   </div>
 </div>
-
+ 
 <div id="toast" class="toast"></div>
-
+ 
 <script>
 /* ---------- config ----------
    ▼▼▼ 여기에 Apps Script 웹앱 배포 주소를 붙여넣으세요 ▼▼▼
    (https://script.google.com/macros/s/........./exec 형태) */
 const API_URL='https://script.google.com/macros/s/AKfycbxLiGl61DIusZp0CBo1hL_cD0plJq9JCk5wFgVrVmOpUYDd2qk-tjJxFjinZy_5oWtj0Q/exec';
 /* ▲▲▲ 위 한 줄만 바꾸면 백엔드 연결 완료 ▲▲▲ */
-
+ 
 let ROLE='public';
 let MODE='test';
 let committed=null;
@@ -321,7 +327,7 @@ let ADMIN_TOKEN=null;        // 로그인 성공 시 서버가 발급한 토큰
 let LEDGER_CACHE=[];         // 검증용 이력 캐시 (시드 자동 조회)
 const enc=new TextEncoder();
 function apiReady(){return API_URL && API_URL.indexOf('PASTE_')===-1;}
-
+ 
 /* 서버 통신 (CORS preflight 회피: text/plain 단순 요청) */
 async function apiPost(payload){
   const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(payload)});
@@ -331,7 +337,7 @@ async function apiGet(){
   const r=await fetch(API_URL,{method:'GET'});
   return await r.json();
 }
-
+ 
 /* ---------- crypto/helpers ---------- */
 async function sha256(str){
   const buf=await crypto.subtle.digest('SHA-256',enc.encode(str));
@@ -357,7 +363,7 @@ async function drawWinners(entrants,prizes,finalSeed){
   }
   return out;
 }
-
+ 
 /* ---------- role / login (서버 검증) ---------- */
 function onRoleClick(){
   if(ROLE==='admin'){ logout(); }
@@ -429,7 +435,7 @@ function logout(){
   loadHistory();
   toast('로그아웃되었습니다');
 }
-
+ 
 /* ---------- mode ---------- */
 function setMode(m){
   MODE=m;
@@ -440,7 +446,7 @@ function setMode(m){
   else{b.className='mbanner real';b.textContent='⚠ 실제 추첨 모드 — 결과가 영구 이력에 기록되고 모든 접속자에게 공개됩니다.';}
   resetDraw();
 }
-
+ 
 /* ---------- prizes ui ---------- */
 function addPrize(name='',count=1){
   const wrap=document.getElementById('prizes');const row=document.createElement('div');row.className='prize-row';
@@ -452,7 +458,7 @@ function addPrize(name='',count=1){
 function getPrizes(){return [...document.querySelectorAll('#prizes .prize-row')].map(r=>{const [n,c]=r.querySelectorAll('input');return {name:n.value.trim()||'경품',count:Math.max(1,parseInt(c.value)||1)};});}
 function getEntrants(){return document.getElementById('entrants').value.split('\n').map(s=>s.trim()).filter(Boolean);}
 document.getElementById('entrants').addEventListener('input',()=>{document.getElementById('entCount').textContent=getEntrants().length+'명';});
-
+ 
 /* ---------- commit ---------- */
 async function doCommit(){
   const entrants=getEntrants();const prizes=getPrizes();
@@ -475,7 +481,7 @@ async function doCommit(){
   document.getElementById('btnCommit').disabled=true;
   toast('봉인 완료 — 추첨 준비됨');
 }
-
+ 
 /* ---------- reveal ---------- */
 async function fetchBlockHash(){
   try{const r=await fetch('https://blockchain.info/q/latesthash',{cache:'no-store'});if(r.ok){const h=(await r.text()).trim();if(/^[0-9a-f]{64}$/.test(h))return h;}}catch(e){}
@@ -516,7 +522,7 @@ function renderResults(results,blockHash,finalSeed){
 }
 function resetDraw(){committed=null;document.getElementById('commitOut').innerHTML='';document.getElementById('resultOut').innerHTML='';
   document.getElementById('btnReveal').disabled=true;document.getElementById('btnCommit').disabled=false;}
-
+ 
 /* ---------- history (서버 = Google 스프레드시트) ---------- */
 async function saveHistory(c){
   const rec={id:'draw_'+Date.now(),eventName:c.eventName,time:c.time,entrantCount:c.entrants.length,
@@ -547,15 +553,20 @@ async function loadHistory(){
     const d=new Date(r.time);const dstr=isNaN(d)?r.time:d.toLocaleString('ko-KR',{dateStyle:'medium',timeStyle:'short'});
     const sum=r.prizes.map(p=>`${p.name}: ${p.winners.join(', ')}`).join(' · ');
     const adminDel = ROLE==='admin' ? `<button onclick='delHistory(${JSON.stringify(r.id)})' style="color:var(--crimson)">삭제</button>` : '';
-    return `<div class="hitem"><div class="hh"><span class="ht">🎯 ${r.eventName||'추첨'}</span><span class="hdate">${dstr}</span></div>
-      <div class="hsum">참가 ${r.entrantCount}명 · ${sum}</div>
-      <div class="hhash">commit: ${r.commitHash}</div>
-      <div class="hactions">
-        <button onclick='sendToVerifier(${JSON.stringify(JSON.stringify(r))})' style="background:var(--green);color:#fff;border-color:var(--green)">🔁 이 추첨 검증하기</button>
-        <button onclick='showVerify(${JSON.stringify(JSON.stringify(r))})'>검증 데이터</button>
-        <button onclick='copyVerify(${JSON.stringify(JSON.stringify(r))})'>복사</button>
-        ${adminDel}
-      </div></div>`;
+    return `<details class="hitem"><summary>
+        <span class="ht">🎯 ${r.eventName||'추첨'}</span>
+        <span class="hdate-wrap"><span class="hdate">${dstr}</span><span class="hcaret">▾</span></span>
+      </summary>
+      <div class="hbody">
+        <div class="hsum">참가 ${r.entrantCount}명 · ${sum}</div>
+        <div class="hhash">commit: ${r.commitHash}</div>
+        <div class="hactions">
+          <button onclick='sendToVerifier(${JSON.stringify(JSON.stringify(r))})' style="background:var(--green);color:#fff;border-color:var(--green)">🔁 이 추첨 검증하기</button>
+          <button onclick='showVerify(${JSON.stringify(JSON.stringify(r))})'>검증 데이터</button>
+          <button onclick='copyVerify(${JSON.stringify(JSON.stringify(r))})'>복사</button>
+          ${adminDel}
+        </div>
+      </div></details>`;
   }).join('');
 }
 async function delHistory(id){
@@ -572,7 +583,7 @@ function showVerify(s){const r=JSON.parse(s);
 function copyVerify(s){const r=JSON.parse(s);
   const txt=JSON.stringify({eventName:r.eventName,commitHash:r.commitHash,seed:r.seed,blockHash:r.blockHash,finalSeed:r.finalSeed,time:r.time,entrants:r.entrants,prizes:r.prizes.map(p=>({name:p.name,count:p.count}))},null,2);
   navigator.clipboard.writeText(txt).then(()=>toast('검증 데이터 복사됨')).catch(()=>toast('복사 실패'));}
-
+ 
 /* ---------- verifier ---------- */
 function addVPrize(name='',count=1){
   const wrap=document.getElementById('vPrizes');const row=document.createElement('div');row.className='prize-row';
